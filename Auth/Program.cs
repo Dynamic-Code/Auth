@@ -2,7 +2,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
+// adding authenctication handler and adding the cookie authentication handler 
+builder.Services.AddAuthentication().AddCookie("MyCookie",options =>
+{
+    //configure option, specifing cookie name 
+    options.Cookie.Name = "MyCookie";
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -12,7 +17,6 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
