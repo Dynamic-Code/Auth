@@ -7,6 +7,7 @@ builder.Services.AddAuthentication().AddCookie("MyCookie",options =>
 {
     //configure option, specifing cookie name 
     options.Cookie.Name = "MyCookie";
+    options.LoginPath = "/Account/Login"; // explicitly providing the login path
 });
 var app = builder.Build();
 
