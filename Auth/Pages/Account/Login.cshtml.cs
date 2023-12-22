@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace Auth.Pages.Account
 {
-    public class loggingModel : PageModel
+    public class LoggingModel : PageModel
     {
         [BindProperty]
         public Credential Credential { get; set; }
