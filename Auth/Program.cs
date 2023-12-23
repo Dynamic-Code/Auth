@@ -8,6 +8,15 @@ builder.Services.AddAuthentication().AddCookie("MyCookie",options =>
     //configure option, specifing cookie name 
     options.Cookie.Name = "MyCookie";
     options.LoginPath = "/Account/Login"; // explicitly providing the login path
+    options.AccessDeniedPath = "/Account/AccessDenied"; // Added explictly path for access denied page
+});
+// Adding Authorization
+builder.Services.AddAuthorization(options =>
+{
+    // Adding the 1st policy MustBelongToHRDepartment to access HR page
+    options.AddPolicy("MustBelongToHRDepartment", 
+        policy => policy.RequireClaim("Department", "HR")); //Added this Department claim with HR value to our policy MustBelongToHRDepartment,
+                                                            //means this policy will require a claim Department with value HR then only it will Authorize 
 });
 var app = builder.Build();
 
@@ -15,7 +24,8 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // The default HSTS value is 30 days.
+    // You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 app.UseHttpsRedirection();
