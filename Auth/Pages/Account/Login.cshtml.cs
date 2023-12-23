@@ -28,7 +28,8 @@ namespace Auth.Pages.Account
                     new Claim(ClaimTypes.Email,"admin@mywebsite.com"),
                     new Claim("Department","HR"), // Added a new Department claim to Authorize the HR page policy
                                                  // because HR page policy require a claim Department with HR value
-                    new Claim("Admin","true") // Added a new claim Admin to resolve AdminOnly Policy 
+                    new Claim("Admin","true"), // Added a new claim Admin to resolve AdminOnly Policy 
+                    new Claim("Manager","true") // Added a new claim to resolve ManagerClaim Policy
                 };
                 // creating Identity 
                 // MyCookie is the Authentication, can give any name you want
