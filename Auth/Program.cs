@@ -17,6 +17,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("MustBelongToHRDepartment", 
         policy => policy.RequireClaim("Department", "HR")); //Added this Department claim with HR value to our policy MustBelongToHRDepartment,
                                                             //means this policy will require a claim Department with value HR then only it will Authorize 
+    options.AddPolicy("AdminOnly",
+        policy => policy.RequireClaim("Admin")); //Added a new policy AdminOnly with Admin Claim to access Setting page 
 });
 var app = builder.Build();
 
