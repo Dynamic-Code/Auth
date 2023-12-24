@@ -29,7 +29,9 @@ namespace Auth.Pages.Account
                     new Claim("Department","HR"), // Added a new Department claim to Authorize the HR page policy
                                                  // because HR page policy require a claim Department with HR value
                     new Claim("Admin","true"), // Added a new claim Admin to resolve AdminOnly Policy 
-                    new Claim("Manager","true") // Added a new claim to resolve ManagerClaim Policy
+                    new Claim("Manager","true"), // Added a new claim to resolve ManagerClaim Policy
+
+                    new Claim("EmploymentDate","2021-02-01") // Added a new Claim for complex Authorization 
                 };
                 // creating Identity 
                 // MyCookie is the Authentication, can give any name you want

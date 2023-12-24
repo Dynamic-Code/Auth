@@ -1,3 +1,6 @@
+using Auth.Authorization;
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,10 +22,16 @@ builder.Services.AddAuthorization(options =>
                                                             //means this policy will require a claim Department with value HR then only it will Authorize 
     options.AddPolicy("AdminOnly",
         policy => policy.RequireClaim("Admin")); //Added a new policy AdminOnly with Admin Claim to access Setting page 
-    
-    options.AddPolicy("HRManagerOnly",
-        policy => policy.RequireClaim("Department", "HR").RequireClaim("Manager")); // Added a new policy 
+
+    options.AddPolicy("HRManagerOnly",   // Added a new policy 
+        policy => policy
+        .RequireClaim("Department", "HR")
+        .RequireClaim("Manager")
+        .Requirements.Add(new HRManagerProbationRequirement(3))  // added our special claim handler 
+        ) ; 
 });
+
+builder.Services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>(); // DI our service
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
