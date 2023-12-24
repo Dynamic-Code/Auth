@@ -34,18 +34,25 @@ namespace Auth.Pages.Account
                     new Claim("EmploymentDate","2021-02-01") // Added a new Claim for complex Authorization 
                 };
                 // creating Identity 
-                // MyCookie is the Authentication, can give any name you want
+                // MyCookie is the Authentication cookie name, can give any name you want
                 var identity = new ClaimsIdentity(claims, "MyCookie");
 
                 // creating claims principal which contains the Security context
                 ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+
+
+                // Added code to make the cookie persistent so that it does not get cleared after closing browser
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = Credential.RememberMe,
+                };
 
                 //now we need to encrypt and serilaze the security context then it can go to cookie
                 // we use HttpContext it has a SignInAsync() which is a extension method which take Authentication type and claimsprincipal
 
                 // This will going to serialze the claimsPrincipal into it a stream and encrypt the stream to save that as a cookie in HttpContext object.
 
-                await HttpContext.SignInAsync("MyCookie", claimsPrincipal);
+                await HttpContext.SignInAsync("MyCookie", claimsPrincipal, authProperties);
 
                 return RedirectToPage("/Index");
 
@@ -62,5 +69,8 @@ namespace Auth.Pages.Account
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Display(Name = "Remember Me")]
+        public bool RememberMe { get; set; }
     }
 }
