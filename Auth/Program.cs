@@ -32,6 +32,12 @@ builder.Services.AddAuthorization(options =>
         );
 });
 
+//This will call our web api automatically
+builder.Services.AddHttpClient("OurWebApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7062/");
+});
+
 builder.Services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>(); // DI our service
 var app = builder.Build();
 
