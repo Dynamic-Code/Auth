@@ -38,6 +38,14 @@ builder.Services.AddHttpClient("OurWebApi", client =>
     client.BaseAddress = new Uri("https://localhost:7062/");
 });
 
+//Configuring session MW to store our JWT 
+builder.Services.AddSession(session =>
+{
+    session.Cookie.HttpOnly = true; //secure cookie 
+    session.IdleTimeout = TimeSpan.FromMinutes(20); //session expires in 20 minutes
+    session.Cookie.IsEssential = true;
+});
+
 builder.Services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>(); // DI our service
 var app = builder.Build();
 
@@ -56,6 +64,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapRazorPages();
 
