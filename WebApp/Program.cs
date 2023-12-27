@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
 
@@ -11,6 +12,27 @@ builder.Services.AddDbContext<ApplicationDBConext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
+
+//DI to configure Identity, IdentityUser, IdentityRole comes from nuget package
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => // configure identity
+{
+    options.Password.RequiredLength = 8;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+    options.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<ApplicationDBConext>(); // tell identity to use this ApplicationDBConext to connect with actual DB
+
+builder.Services.ConfigureApplicationCookie(options => // Identity also uses cookie so we need to configure the cookie as well
+{
+    options.LoginPath = "/Account/login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,7 +47,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication(); //enable authentication
 app.UseAuthorization();
 
 app.MapRazorPages();
