@@ -5,7 +5,7 @@ namespace WEB_API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    [Authorize(policy:"AdminOnly")] // Adding a  policy so that only Admin can access 
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

@@ -32,6 +32,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options => // configuring the Authroixation MW to add adminOnly policy
+{
+    options.AddPolicy("AdminOnly",
+        policy => policy.RequireClaim("Admin")); // AdminOnly policy requiure Admin claim which is already added 
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
