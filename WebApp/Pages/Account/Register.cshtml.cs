@@ -39,7 +39,16 @@ namespace WebApp.Pages.Account
 
             if (result.Succeeded) // if user creation is successfull then redirect to login
             {
-                return RedirectToPage("/Account/Login");
+                var  confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user); // Creating a new token which we will send via email to verfy email. Also user must have a ID
+
+                return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
+                    values: new
+                    {
+                        usrId = user.Id,
+                        token = confirmationToken
+                    })??""); 
+                
+                //return RedirectToPage("/Account/Login");
             }
             else
             {

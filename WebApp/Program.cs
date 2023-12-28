@@ -24,8 +24,12 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => // configure
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
 
     options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = true; // this make the email confirmation manditory
 })
-    .AddEntityFrameworkStores<ApplicationDBConext>(); // tell identity to use this ApplicationDBConext to connect with actual DB
+
+    // tell identity to use this ApplicationDBConext to connect with actual DB
+    .AddEntityFrameworkStores<ApplicationDBConext>()
+    .AddDefaultTokenProviders(); //token provider for emailconfirmationtoken
 
 builder.Services.ConfigureApplicationCookie(options => // Identity also uses cookie so we need to configure the cookie as well
 {
