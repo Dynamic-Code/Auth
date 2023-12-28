@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Net.Mail;
+using WebApp.Services;
+using WebApp.Settings;
 
 namespace WebApp.Pages.Account
 {
@@ -10,10 +14,12 @@ namespace WebApp.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IEmailService emailService;
 
-        public RegisterModel(UserManager<IdentityUser> _userManager) // inject Usermanager
+        public RegisterModel(UserManager<IdentityUser> _userManager, IEmailService _emailService) // inject Usermanager and email service
         {
             this.userManager = _userManager;
+            this.emailService = _emailService;
         }
 
         [BindProperty]
@@ -41,14 +47,20 @@ namespace WebApp.Pages.Account
             {
                 var  confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user); // Creating a new token which we will send via email to verfy email. Also user must have a ID
 
-                return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
-                    values: new
-                    {
-                        userId = user.Id,
-                        token = confirmationToken
-                    })??""); 
+                var confirmationLink = Url.PageLink(pageName: "/Account/ConfirmEmail",
+                   values: new
+                   {
+                       userId = user.Id,
+                       token = confirmationToken
+                   });
+
+                await emailService.SendAsync("dynamic2106@gmail.com",
+                    user.Email,
+                    "Verify Email",
+                    $"Please verify email id by clicking on link :{confirmationLink}");
+
                 
-                //return RedirectToPage("/Account/Login");
+                return RedirectToPage("/Account/Login");
             }
             else
             {

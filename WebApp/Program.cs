@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using WebApp.Services;
+using WebApp.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +39,12 @@ builder.Services.ConfigureApplicationCookie(options => // Identity also uses coo
     options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
+//using options pattern of asp.net core to load setting class
+// when smtpstting service get called, it will create the instace with the data from appsetting.json SMTP section
+builder.Services.Configure<SmtpSetting>(builder.Configuration.GetSection("SMTP"));
+
+// injecting email service
+builder.Services.AddSingleton<IEmailService, EmailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
