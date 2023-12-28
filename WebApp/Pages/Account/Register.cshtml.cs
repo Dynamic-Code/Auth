@@ -44,7 +44,7 @@ namespace WebApp.Pages.Account
                 return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
                     values: new
                     {
-                        usrId = user.Id,
+                        userId = user.Id,
                         token = confirmationToken
                     })??""); 
                 
