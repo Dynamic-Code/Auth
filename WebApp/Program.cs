@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using WebApp.Data.Account;
 using WebApp.Services;
 using WebApp.Settings;
 
@@ -15,8 +16,8 @@ builder.Services.AddDbContext<ApplicationDBConext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
-//DI to configure Identity, IdentityUser, IdentityRole comes from nuget package
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => // configure identity
+//DI to configure Identity, IdentityUser, IdentityRole comes from nuget package. IdentityUser storing the user data. IdentityUser is replaced with User
+builder.Services.AddIdentity<User, IdentityRole>(options => // configure identity
 {
     options.Password.RequiredLength = 8;
     options.Password.RequireLowercase = true;

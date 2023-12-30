@@ -2,14 +2,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using WebApp.Data.Account;
 
 namespace WebApp.Pages.Account
 {
     public class LoggingModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<User> signInManager;
 
-        public LoggingModel(SignInManager<IdentityUser> _signInManager) // inject SignInManager
+        public LoggingModel(SignInManager<User> _signInManager) // inject SignInManager
         {
             this.signInManager = _signInManager;
         }

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Mail;
+using WebApp.Data.Account;
 using WebApp.Services;
 using WebApp.Settings;
 
@@ -13,10 +14,10 @@ namespace WebApp.Pages.Account
     // created this to implement register new user
     public class RegisterModel : PageModel
     {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<User> userManager;
         private readonly IEmailService emailService;
 
-        public RegisterModel(UserManager<IdentityUser> _userManager, IEmailService _emailService) // inject Usermanager and email service
+        public RegisterModel(UserManager<User> _userManager, IEmailService _emailService) // inject Usermanager and email service
         {
             this.userManager = _userManager;
             this.emailService = _emailService;
@@ -34,10 +35,12 @@ namespace WebApp.Pages.Account
             //validate email address (optional  as we already chcking the uniquness of the email in program.cs identity config)
 
             //create the user
-            var user = new IdentityUser //  creating a new user Obj
+            var user = new User //  creating a new user Obj
             {
                 Email = RegisterViewModel.Email,
-                UserName = RegisterViewModel.Email
+                UserName = RegisterViewModel.Email,
+                Department = RegisterViewModel.Department,
+                Position = RegisterViewModel.Position
             };
 
             // Usermanager will create the User. Usermanager Comes with identity which we need to inject
@@ -46,21 +49,29 @@ namespace WebApp.Pages.Account
             if (result.Succeeded) // if user creation is successfull then redirect to login
             {
                 var  confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user); // Creating a new token which we will send via email to verfy email. Also user must have a ID
-
-                var confirmationLink = Url.PageLink(pageName: "/Account/ConfirmEmail",
+                return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
                    values: new
                    {
                        userId = user.Id,
                        token = confirmationToken
-                   });
+                   }) ?? "");
 
-                await emailService.SendAsync("dynamic2106@gmail.com",
-                    user.Email,
-                    "Verify Email",
-                    $"Please verify email id by clicking on link :{confirmationLink}");
+                //Email Confirmation flow
 
-                
-                return RedirectToPage("/Account/Login");
+                //var confirmationLink = Url.PageLink(pageName: "/Account/ConfirmEmail",
+                //   values: new
+                //   {
+                //       userId = user.Id,
+                //       token = confirmationToken
+                //   });
+
+                //await emailService.SendAsync("dynamic2106@gmail.com",
+                //    user.Email,
+                //    "Verify Email",
+                //    $"Please verify email id by clicking on link :{confirmationLink}");
+
+
+                //return RedirectToPage("/Account/Login");
             }
             else
             {
@@ -80,5 +91,10 @@ namespace WebApp.Pages.Account
         [Required]
         [DataType(dataType: DataType.Password)]
         public string Password { get; set; } = string.Empty;
+
+        [Required]
+        public string Department { get; set; } = string.Empty;
+        [Required]
+        public string Position { get; set; } = string.Empty;
     }
 }
