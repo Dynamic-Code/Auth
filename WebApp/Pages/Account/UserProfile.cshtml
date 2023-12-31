@@ -1,0 +1,48 @@
+﻿@page
+@model WebApp.Pages.Account.UserProfileModel
+@{
+}
+<form method="post">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <div class="form-group row pb-2">
+        <div class="col-2">
+            <label asp-for="userProfile.Email"></label>
+        </div>
+        <div class="col-5">
+            <input type="text" asp-for="userProfile.Email" class="form-control" readonly>
+        </div>
+        <span class="text-danger" asp-validation-for="userProfile.Email"></span>
+    </div>
+
+    <div class="form-group row pb-2">
+        <div class="col-2">
+            <label asp-for="userProfile.Department"></label>
+        </div>
+        <div class="col-5">
+            <input type="text" asp-for="userProfile.Department" class="form-control">
+        </div>
+        <span class="text-danger" asp-validation-for="userProfile.Department"></span>
+    </div><div class="form-group row pb-2">
+        <div class="col-2">
+            <label asp-for="userProfile.Position"></label>
+        </div>
+        <div class="col-5">
+            <input type="text" asp-for="userProfile.Position" class="form-control">
+        </div>
+        <span class="text-danger" asp-validation-for="userProfile.Position"></span>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-2">
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </div>
+        <div class="col-5">
+        </div>
+    </div>
+</form>
+@if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @Model.SuccessMessage
+    </div>
+}
