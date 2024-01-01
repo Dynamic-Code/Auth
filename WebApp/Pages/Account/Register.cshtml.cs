@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Claims;
 using WebApp.Data.Account;
 using WebApp.Services;
 using WebApp.Settings;
@@ -39,15 +40,25 @@ namespace WebApp.Pages.Account
             {
                 Email = RegisterViewModel.Email,
                 UserName = RegisterViewModel.Email,
-                Department = RegisterViewModel.Department,
-                Position = RegisterViewModel.Position
+
+                //Department = RegisterViewModel.Department,
+                //Position = RegisterViewModel.Position
             };
+
+            //Adding new claims for user info
+            var claimDepartment = new Claim("Department", RegisterViewModel.Department);
+            var claimPosition = new Claim("Position", RegisterViewModel.Position);
+
 
             // Usermanager will create the User. Usermanager Comes with identity which we need to inject
             var result = await userManager.CreateAsync(user,RegisterViewModel.Password);  // create user with password
 
             if (result.Succeeded) // if user creation is successfull then redirect to login
             {
+                // adding the claims
+                await this.userManager.AddClaimAsync(user, claimDepartment);  
+                await this.userManager.AddClaimAsync(user, claimPosition);
+
                 var  confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user); // Creating a new token which we will send via email to verfy email. Also user must have a ID
                 return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
                    values: new

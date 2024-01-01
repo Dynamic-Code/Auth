@@ -26,6 +26,7 @@ namespace WebApp.Pages.Account
         }
 
         public async Task<IActionResult> OnGetAsync()
+        
         {
             this.SuccessMessage = string.Empty;
 
@@ -69,7 +70,7 @@ namespace WebApp.Pages.Account
             {
                 var claims = await userManager.GetClaimsAsync(user); //get claims info of the user
                 var departmentClaim = claims.FirstOrDefault(x => x.Type == "Department");
-                var positionClaim = claims.FirstOrDefault(x => x.Type == "Positions");
+                var positionClaim = claims.FirstOrDefault(x => x.Type == "Position");
 
                 return (user, departmentClaim, positionClaim);
             }
